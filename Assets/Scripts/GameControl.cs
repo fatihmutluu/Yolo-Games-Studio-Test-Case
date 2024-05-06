@@ -32,15 +32,17 @@ public class GameControl : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePosition = Input.mousePosition;
-            // topLeftCorner = (114.46, 1615.01, 0.00)
-            // botRightCorner = (962.63, 447.32, 0.00)
+            // topLeftCorner = (52.01, 1641.15, 0.00)
+            // botRightCorner = (1027.99, 322.42, 0.00)
+
+            Debug.Log(mousePosition);
 
             // ! check if mouse click is in the game area
             if (
-                mousePosition.x < 114.46f
-                || mousePosition.x > 962.63f
-                || mousePosition.y < 447.32f
-                || mousePosition.y > 1615.01f
+                mousePosition.x < 52.01f
+                || mousePosition.x > 1027.99f
+                || mousePosition.y > 1641.15f
+                || mousePosition.y < 322.42f
             )
             {
                 Debug.Log("Out of bounds");
@@ -60,10 +62,22 @@ public class GameControl : MonoBehaviour
     {
         Debug.Log("Checking Hit");
 
+        // Convert to world coordinates
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        mousePosition.z = 0;
+
+        Debug.Log("Mouse position: " + mousePosition);
+
         // ! look for is mousePosition in hitbox of any difference
         foreach (GameObject difference in differences)
         {
-            CapsuleCollider2D hitBox = difference.GetComponentInChildren<CapsuleCollider2D>();
+            Debug.Log("difference: " + difference.name);
+            CapsuleCollider2D hitBox = difference
+                .transform.GetChild(0)
+                .GetComponent<CapsuleCollider2D>();
+
+            Debug.Log("hitBox: " + hitBox.bounds);
+
             if (hitBox != null && hitBox.bounds.Contains(mousePosition))
             {
                 Debug.Log("Hit!");

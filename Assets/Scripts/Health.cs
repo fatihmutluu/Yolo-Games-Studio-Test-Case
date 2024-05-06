@@ -11,12 +11,14 @@ public class Health : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Health is awake");
         health = 3;
         hearts = GetComponentsInChildren<Image>().ToList();
     }
 
     public void TakeDamage()
     {
+        Debug.Log("Taking damage");
         health--;
 
         // ! full protection to gain health -> can be simplified (maybe gain health is not needed at all)

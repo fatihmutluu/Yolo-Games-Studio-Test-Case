@@ -1,27 +1,35 @@
 using UnityEngine;
 
-public class ZoomScript : MonoBehaviour
+public class SpriteZoomPan : MonoBehaviour
 {
-    public GameObject firstImage;
-    public GameObject secondImage;
+    public float zoomSpeed = 0.1f;
+    public float maxZoom = 3.0f;
+    public float minZoom = 1.0f;
+    private Vector3 originalScale;
 
-    private void Update()
+    void Start()
     {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        originalScale = transform.localScale;
+    }
 
-        Vector3 scale = firstImage.transform.localScale;
-        if (scroll != 0.0f)
+    void Update()
+    {
+        // Zoom based on mouse scroll and maintain the original aspect ratio
+        if (Input.GetAxis("Mouse ScrollWheel") != 0)
         {
-            if (scroll > 0.0f && scale.x >= 1.3f)
-                return;
+            float scaleChange = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+            float currentScaleX = transform.localScale.x + scaleChange;
+            float newScale = Mathf.Clamp(
+                currentScaleX,
+                minZoom * originalScale.x,
+                maxZoom * originalScale.x
+            );
 
-            if (scroll < 0.0f && scale.x <= 1f)
-                return;
-
-            scale.x += scroll;
-            scale.y += scroll;
-            firstImage.transform.localScale = scale;
-            secondImage.transform.localScale = scale;
+            transform.localScale = new Vector3(
+                newScale,
+                newScale * originalScale.y / originalScale.x,
+                1f
+            );
         }
     }
 }

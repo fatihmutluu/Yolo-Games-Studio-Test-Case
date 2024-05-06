@@ -13,7 +13,7 @@ public class Hint : MonoBehaviour
 
     private void Awake()
     {
-        controller = GameObject.Find("Panel").GetComponent<GameControl>();
+        controller = GameObject.Find("Images").GetComponent<GameControl>();
     }
 
     public void HintButtonClicked()

@@ -14,7 +14,7 @@ public class ClickHandler : MonoBehaviour
     private void Awake()
     {
         gameControl = GetComponent<GameControl>();
-        healthBar = GameObject.Find("Health Bar");
+        healthBar = GameObject.Find("HearthBar");
     }
 
     public void Hit(GameObject difference)
@@ -37,7 +37,7 @@ public class ClickHandler : MonoBehaviour
 
         //create object from MissIcon prefab at mousePosition in the panel and destroy it after given seconds
         GameObject missIconObject = Instantiate(missIcon, mousePosition, Quaternion.identity);
-        GameObject panel = GameObject.Find("Panel");
+        GameObject panel = GameObject.Find("Images");
         missIconObject.transform.SetParent(panel.transform, true);
         Destroy(missIconObject, missIconTime);
 
