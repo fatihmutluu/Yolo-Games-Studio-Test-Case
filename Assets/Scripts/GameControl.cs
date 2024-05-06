@@ -11,6 +11,9 @@ public class GameControl : MonoBehaviour
     [SerializeField]
     private GameObject leftCounter;
 
+    private bool isDragging = false;
+    private Vector3 initialMousePosition;
+
     private void Awake()
     {
         clickHandler = GetComponent<ClickHandler>();
@@ -29,27 +32,38 @@ public class GameControl : MonoBehaviour
             Debug.Log("You Win!");
         }
 
-        if (Input.GetMouseButtonDown(0))
+        // Check for mouse input only if not dragging
+        if (!isDragging)
         {
-            Vector3 mousePosition = Input.mousePosition;
-            // topLeftCorner = (52.01, 1641.15, 0.00)
-            // botRightCorner = (1027.99, 322.42, 0.00)
-
-            Debug.Log(mousePosition);
-
-            // ! check if mouse click is in the game area
-            if (
-                mousePosition.x < 52.01f
-                || mousePosition.x > 1027.99f
-                || mousePosition.y > 1641.15f
-                || mousePosition.y < 322.42f
-            )
+            if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("Out of bounds");
-                return;
+                initialMousePosition = Input.mousePosition; // Store initial mouse position
             }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                // Calculate the distance moved by the mouse
+                float distance = Vector3.Distance(initialMousePosition, Input.mousePosition);
 
-            CheckIfHitDifference(mousePosition);
+                // If the distance is small, treat it as a click, otherwise consider it dragging
+                if (distance < 10f) // Adjust this threshold as needed
+                {
+                    Vector3 mousePosition = Input.mousePosition;
+                    Debug.Log(mousePosition);
+
+                    if (
+                        mousePosition.x < 52.01f
+                        || mousePosition.x > 1027.99f
+                        || mousePosition.y > 1641.15f
+                        || mousePosition.y < 322.42f
+                    )
+                    {
+                        Debug.Log("Out of bounds");
+                        return;
+                    }
+
+                    CheckIfHitDifference(mousePosition);
+                }
+            }
         }
     }
 
