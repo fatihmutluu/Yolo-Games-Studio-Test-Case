@@ -21,11 +21,9 @@ public class ClickHandler : MonoBehaviour
     {
         Debug.Log("Handling hit");
 
-        Animator animator = difference.transform.GetChild(1).GetComponent<Animator>();
-        animator.SetTrigger("Hit");
-
-        Animator hintAnimator = difference.transform.GetChild(2).GetComponent<Animator>();
-        hintAnimator.SetBool("isActive", false);
+        difference.transform.GetChild(2).gameObject.SetActive(false);
+        difference.transform.GetChild(2).gameObject.SetActive(false);
+        GameObject.Find("Black").GetComponent<Animator>().SetBool("isActive", false);
 
         gameControl.differences.Remove(difference);
         Debug.Log("Differences left: " + gameControl.differences.Count);

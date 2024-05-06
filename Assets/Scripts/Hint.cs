@@ -33,7 +33,7 @@ public class Hint : MonoBehaviour
             x.name == first_difference.name && x != first_difference
         );
 
-        if (first_difference.transform.GetChild(2).GetComponent<Animator>().GetBool("isActive"))
+        if (GameObject.Find("Black").GetComponent<Animator>().GetBool("isActive"))
             return;
 
         BlackOut(first_difference, "hint button clicked");
@@ -44,8 +44,10 @@ public class Hint : MonoBehaviour
 
     private void BlackOut(GameObject difference, string trigger)
     {
-        difference.transform.GetChild(2).GetComponent<Animator>().SetTrigger(trigger);
-        difference.transform.GetChild(2).GetComponent<Animator>().SetBool("isActive", true);
+        difference.transform.GetChild(2).gameObject.SetActive(true);
+        difference.transform.GetChild(2).gameObject.SetActive(true);
+        GameObject.Find("Black").GetComponent<Animator>().SetTrigger(trigger);
+        GameObject.Find("Black").GetComponent<Animator>().SetBool("isActive", true);
     }
 
     private void UpdateCountLeft()
