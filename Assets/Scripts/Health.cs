@@ -9,8 +9,11 @@ public class Health : MonoBehaviour
 
     private List<Image> hearts;
 
+    private EndGameController endGameController;
+
     private void Awake()
     {
+        endGameController = GameObject.Find("End Game Canvas").GetComponent<EndGameController>();
         Debug.Log("Health is awake");
         health = 3;
         hearts = GetComponentsInChildren<Image>().ToList();
@@ -43,7 +46,7 @@ public class Health : MonoBehaviour
                 hearts[0].color = Color.black;
                 hearts[1].color = Color.black;
                 hearts[2].color = Color.black;
-                // ! lose game
+                endGameController.GameLose();
                 break;
             default:
                 break;

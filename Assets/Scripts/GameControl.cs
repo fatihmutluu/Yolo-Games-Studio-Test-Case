@@ -14,8 +14,11 @@ public class GameControl : MonoBehaviour
     private bool isDragging = false;
     private Vector3 initialMousePosition;
 
+    private EndGameController endGameController;
+
     private void Awake()
     {
+        endGameController = GameObject.Find("End Game Canvas").GetComponent<EndGameController>();
         clickHandler = GetComponent<ClickHandler>();
         differences = GameObject.FindGameObjectsWithTag("Difference").ToList();
         foreach (GameObject difference in differences)
@@ -30,6 +33,7 @@ public class GameControl : MonoBehaviour
         if (CheckWin())
         {
             Debug.Log("You Win!");
+            endGameController.GameWin();
         }
 
         // Check for mouse input only if not dragging

@@ -57,3 +57,6 @@ TagManager:
   - name: Black
     uniqueID: 2344455115
     locked: 0
+  - name: EndGames
+    uniqueID: 1628155665
+    locked: 0
