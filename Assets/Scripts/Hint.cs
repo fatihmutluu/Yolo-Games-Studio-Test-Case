@@ -1,9 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using Microsoft.Unity.VisualStudio.Editor;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Hint : MonoBehaviour
 {
@@ -18,7 +15,28 @@ public class Hint : MonoBehaviour
 
     public void HintButtonClicked()
     {
+        GameObject upBackground = GameObject.Find("Up Background");
+        GameObject downBackground = GameObject.Find("Down Background");
+        StartCoroutine(ScaleWithLerp(upBackground.transform, Drag.initialScale, 0.3f));
+        StartCoroutine(ScaleWithLerp(downBackground.transform, Drag.initialScale, 0.3f));
+
         ShowHint();
+    }
+
+    // ! Scale Slowly (ChatGPT)
+    public IEnumerator ScaleWithLerp(Transform target, Vector3 targetScale, float duration)
+    {
+        Vector3 initialScale = target.localScale;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            target.localScale = Vector3.Lerp(initialScale, targetScale, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        target.localScale = targetScale;
     }
 
     public void ShowHint()

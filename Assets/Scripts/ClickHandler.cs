@@ -3,7 +3,7 @@ using UnityEngine;
 public class ClickHandler : MonoBehaviour
 {
     private GameControl gameControl;
-    private GameObject healthBar;
+    private Health healthBar;
 
     [SerializeField]
     private GameObject missIcon;
@@ -14,7 +14,46 @@ public class ClickHandler : MonoBehaviour
     private void Awake()
     {
         gameControl = GetComponent<GameControl>();
-        healthBar = GameObject.Find("HearthBar");
+        healthBar = GameObject.Find("HearthBar").GetComponent<Health>();
+    }
+
+    public void CheckIfHitDifference(Vector3 mousePosition)
+    {
+        Debug.Log("Checking Hit");
+
+        // ! look for is mousePosition in hitbox of any difference
+        foreach (GameObject difference in gameControl.differences)
+        {
+            Debug.Log("difference: " + difference.name);
+            CapsuleCollider2D hitBox = difference
+                .transform.GetChild(0)
+                .GetComponent<CapsuleCollider2D>();
+
+            Debug.Log("hitBox: " + hitBox.bounds);
+
+            if (hitBox != null && hitBox.bounds.Contains(mousePosition))
+            {
+                Debug.Log("Hit!");
+
+                string difference_name = difference.name;
+                Hit(difference);
+
+                // ! namings of 2 differences are the same act for both
+                GameObject otherDifference = gameControl.differences.Find(x =>
+                    x.name == difference_name
+                );
+                Hit(otherDifference);
+
+                // ! update left counter
+                GameObject.Find("DifferenceLeft").GetComponent<LeftCounter>().UpdateLeftCounter();
+
+                return;
+            }
+        }
+
+        // ! handling miss if no difference was hit
+        Debug.Log("Miss!");
+        Miss(mousePosition);
     }
 
     public void Hit(GameObject difference)
@@ -24,7 +63,7 @@ public class ClickHandler : MonoBehaviour
         Animator animator = difference.transform.GetChild(1).GetComponent<Animator>();
         animator.SetTrigger("Hit");
 
-        // check if 2. child is active
+        // check if Black Mask child is active
         if (difference.transform.GetChild(2).gameObject.activeSelf)
         {
             difference.transform.GetChild(2).gameObject.SetActive(false);
@@ -39,12 +78,13 @@ public class ClickHandler : MonoBehaviour
     {
         Debug.Log("Handling miss");
 
-        //create object from MissIcon prefab at mousePosition in the panel and destroy it after given seconds
-        GameObject missIconObject = Instantiate(missIcon, mousePosition, Quaternion.identity);
-        GameObject panel = GameObject.Find("Images");
-        missIconObject.transform.SetParent(panel.transform, true);
-        Destroy(missIconObject, missIconTime);
+        //create object from MissIcon prefab at mousePosition in the panel and destroy it after given seconds if healt is greater than 1
+        if (healthBar.health > 1)
+        {
+            GameObject missIconObject = Instantiate(missIcon, mousePosition, Quaternion.identity);
+            Destroy(missIconObject, missIconTime);
+        }
 
-        healthBar.GetComponent<Health>().TakeDamage();
+        healthBar.TakeDamage();
     }
 }

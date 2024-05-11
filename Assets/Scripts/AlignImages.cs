@@ -17,6 +17,9 @@ public class AlignImages : MonoBehaviour
     private GameObject upObject;
     private GameObject downObject;
 
+    private Vector3 upNewPosition;
+    private Vector3 downNewPosition;
+
     private void Awake()
     {
         upObject = GameObject.Find("Up Background");
@@ -31,15 +34,14 @@ public class AlignImages : MonoBehaviour
 
     private void Align()
     {
-        var upSpriteRender = upObject.GetComponent<BoxCollider2D>();
-        var upBounds = upSpriteRender.bounds;
-        var upTopRight = upBounds.max;
-        var upBottomLeft = upBounds.min;
+        Bounds upBounds = upObject.GetComponent<BoxCollider2D>().bounds;
+        Vector3 upTopRight = upBounds.max;
+        Vector3 upBottomLeft = upBounds.min;
 
-        Vector3 upNewPosition = upObject.transform.position;
-        Vector3 downNewPosition = downObject.transform.position;
+        upNewPosition = upObject.transform.position;
+        downNewPosition = downObject.transform.position;
 
-        // Adjust horizontal positions
+        // Check if the objects are out of bounds
         if (upBottomLeft.x > BoundLimits.upLeft)
         {
             upNewPosition.x = BoundLimits.upLeft + upBounds.size.x / 2;
@@ -50,8 +52,6 @@ public class AlignImages : MonoBehaviour
             upNewPosition.x = BoundLimits.upRight - upBounds.size.x / 2;
             downNewPosition.x = BoundLimits.downRight - upBounds.size.x / 2;
         }
-
-        // Adjust vertical positions
         if (upTopRight.y < BoundLimits.upTop)
         {
             upNewPosition.y = BoundLimits.upTop - upBounds.size.y / 2;

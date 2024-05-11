@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Drag : MonoBehaviour
@@ -10,7 +8,7 @@ public class Drag : MonoBehaviour
     private Vector3 offset,
         offset_revert;
 
-    private Vector3 initialScale;
+    public static Vector3 initialScale;
 
     private bool dragging = false;
 
