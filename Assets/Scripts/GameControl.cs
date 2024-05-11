@@ -1,6 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
+
+public class BoundLimits
+{
+    public float upLeft;
+    public float upRight;
+    public float upTop;
+    public float upBottom;
+    public float downLeft;
+    public float downRight;
+    public float downTop;
+    public float downBottom;
+}
 
 public class GameControl : MonoBehaviour
 {
@@ -16,6 +30,8 @@ public class GameControl : MonoBehaviour
 
     private EndGameController endGameController;
 
+    private BoundLimits boundLimits;
+
     private void Awake()
     {
         endGameController = GameObject.Find("End Game Canvas").GetComponent<EndGameController>();
@@ -25,6 +41,28 @@ public class GameControl : MonoBehaviour
         {
             Debug.Log(difference.transform.position);
         }
+
+        var upSpriteRender = GameObject.Find("Up Background").GetComponent<BoxCollider2D>();
+        var upBounds = upSpriteRender.bounds;
+        var upTopRight = upBounds.max;
+        var upBottomLeft = upBounds.min;
+
+        var downSpriteRender = GameObject.Find("Down Background").GetComponent<BoxCollider2D>();
+        var downBounds = downSpriteRender.bounds;
+        var downTopRight = downBounds.max;
+        var downBottomLeft = downBounds.min;
+
+        boundLimits = new BoundLimits
+        {
+            upLeft = upBottomLeft.x,
+            upRight = upTopRight.x,
+            upTop = upTopRight.y,
+            upBottom = upBottomLeft.y,
+            downLeft = downBottomLeft.x,
+            downRight = downTopRight.x,
+            downTop = downTopRight.y,
+            downBottom = downBottomLeft.y
+        };
     }
 
     private void Update()
@@ -69,6 +107,8 @@ public class GameControl : MonoBehaviour
                 }
             }
         }
+
+        AlignImages();
     }
 
     private bool CheckWin()
@@ -117,5 +157,80 @@ public class GameControl : MonoBehaviour
         // ! handling miss if no difference was hit
         Debug.Log("Miss!");
         clickHandler.Miss(mousePosition);
+    }
+
+    private void AlignImages()
+    {
+        var upObject = GameObject.Find("Up Background");
+        var upSpriteRender = upObject.GetComponent<BoxCollider2D>();
+        var upBounds = upSpriteRender.bounds;
+        var upTopRight = upBounds.max;
+        var upBottomLeft = upBounds.min;
+
+        var downObject = GameObject.Find("Down Background");
+        var downSpriteRender = downObject.GetComponent<BoxCollider2D>();
+        var downBounds = downSpriteRender.bounds;
+        var downTopRight = downBounds.max;
+        var downBottomLeft = downBounds.min;
+
+        if (upBottomLeft.x > boundLimits.upLeft)
+        {
+            upObject.transform.position = new Vector3(
+                boundLimits.upLeft + upBounds.size.x / 2,
+                upObject.transform.position.y,
+                upObject.transform.position.z
+            );
+
+            downObject.transform.position = new Vector3(
+                boundLimits.downLeft + downBounds.size.x / 2,
+                downObject.transform.position.y,
+                downObject.transform.position.z
+            );
+        }
+
+        if (upTopRight.x < boundLimits.upRight)
+        {
+            upObject.transform.position = new Vector3(
+                boundLimits.upRight - upBounds.size.x / 2,
+                upObject.transform.position.y,
+                upObject.transform.position.z
+            );
+
+            downObject.transform.position = new Vector3(
+                boundLimits.downRight - downBounds.size.x / 2,
+                downObject.transform.position.y,
+                downObject.transform.position.z
+            );
+        }
+
+        if (upTopRight.y < boundLimits.upTop)
+        {
+            upObject.transform.position = new Vector3(
+                upObject.transform.position.x,
+                boundLimits.upTop - upBounds.size.y / 2,
+                upObject.transform.position.z
+            );
+
+            downObject.transform.position = new Vector3(
+                downObject.transform.position.x,
+                boundLimits.downTop - downBounds.size.y / 2,
+                downObject.transform.position.z
+            );
+        }
+
+        if (upBottomLeft.y > boundLimits.upBottom)
+        {
+            upObject.transform.position = new Vector3(
+                upObject.transform.position.x,
+                boundLimits.upBottom + upBounds.size.y / 2,
+                upObject.transform.position.z
+            );
+
+            downObject.transform.position = new Vector3(
+                downObject.transform.position.x,
+                boundLimits.downBottom + downBounds.size.y / 2,
+                downObject.transform.position.z
+            );
+        }
     }
 }
