@@ -52,4 +52,20 @@ public class Health : MonoBehaviour
                 break;
         }
     }
+
+    public void setHealth(int health)
+    {
+        this.health = health;
+        if (health > 3)
+        {
+            hearts[0].color = Color.green;
+            hearts[1].color = Color.green;
+            hearts[2].color = Color.green;
+        }
+        else
+        {
+            this.health += 1;
+            TakeDamage();
+        }
+    }
 }

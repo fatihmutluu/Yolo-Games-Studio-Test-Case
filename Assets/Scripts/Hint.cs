@@ -6,7 +6,7 @@ public class Hint : MonoBehaviour
 {
     private GameControl controller;
 
-    private int counter = 4;
+    public int counter = 4;
 
     private void Awake()
     {
@@ -71,6 +71,13 @@ public class Hint : MonoBehaviour
     private void UpdateCountLeft()
     {
         counter--;
+        TextMeshProUGUI text = GetComponentInChildren<TextMeshProUGUI>();
+        text.text = counter.ToString();
+    }
+
+    public void setHintCount(int count)
+    {
+        counter = count;
         TextMeshProUGUI text = GetComponentInChildren<TextMeshProUGUI>();
         text.text = counter.ToString();
     }
